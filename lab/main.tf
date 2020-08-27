@@ -2,7 +2,7 @@ module "tags_network" {
   source      = "git::https://github.com/cloudposse/terraform-null-label.git"
   namespace   = var.name
   environment = "dev"
-  name        = "devops-bootcamp"
+  name        = "phi_DevOps"
   delimiter   = "_"
 
   tags = {
@@ -11,24 +11,11 @@ module "tags_network" {
   }
 }
 
-module "tags_bastion" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git"
-  namespace   = var.name
-  environment = "dev"
-  name        = "basion-devops-bootcamp"
-  delimiter   = "_"
-
-  tags = {
-    owner = var.name
-    type  = "bastion"
-  }
-}
-
 module "tags_worker" {
   source      = "git::https://github.com/cloudposse/terraform-null-label.git"
   namespace   = var.name
   environment = "dev"
-  name        = "worker-devops-bootcamp"
+  name        = "phi_worker-devops-bootcamp"
   delimiter   = "_"
 
   tags = {
@@ -42,7 +29,7 @@ module "tags_controlplane" {
   source      = "git::https://github.com/cloudposse/terraform-null-label.git"
   namespace   = var.name
   environment = "dev"
-  name        = "controlplane-devops-bootcamp"
+  name        = "phi_controlplane-devops-bootcamp"
   delimiter   = "_"
 
   tags = {
@@ -57,7 +44,7 @@ data "aws_ami" "latest_server" {
 
   filter {
     name   = "name"
-    values = ["bryan-k3s-server*"]
+    values = ["phi-k3s-server*"]
   }
 }
 
@@ -67,7 +54,7 @@ data "aws_ami" "latest_agent" {
 
   filter {
     name   = "name"
-    values = ["bryan-k3s-agent*"]
+    values = ["phi-k3s-agent*"]
   }
 }
 
@@ -77,8 +64,8 @@ resource "aws_vpc" "lab" {
   enable_dns_hostnames = true
 }
 
-resource "aws_route53_zone" "bryan_dobc" {
-  name = "bryan.dobc"
+resource "aws_route53_zone" "phi_com" {
+  name = "phi.com"
   tags = module.tags_network.tags
 
   vpc {
@@ -101,13 +88,6 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-resource "aws_subnet" "bastion" {
-  vpc_id                  = aws_vpc.lab.id
-  cidr_block              = "10.0.1.0/24"
-  map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.available.names[0]
-  tags                    = module.tags_bastion.tags
-}
 
 resource "aws_subnet" "worker" {
   count                   = 2
@@ -126,7 +106,7 @@ resource "aws_subnet" "controlplane" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   tags                    = module.tags_controlplane.tags
 }
-
+/*
 resource "aws_security_group" "bastion" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_bastion.tags
@@ -145,7 +125,7 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
+*/
 resource "aws_security_group" "controlplane" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_controlplane.tags
@@ -170,13 +150,15 @@ resource "aws_security_group" "controlplane" {
     protocol        = "tcp"
     security_groups = [aws_security_group.worker.id]
   }
-
+//And i change here
   ingress {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.bastion.id]
+		cidr_block      =["0.0.0.0/0"]
+   // security_groups = [aws_security_group.bastion.id]
   }
+
 }
 
 resource "aws_security_group" "worker" {
@@ -192,7 +174,7 @@ resource "aws_security_group_rule" "egress_to_all" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
 }
-
+ /*
 resource "aws_security_group_rule" "ssh_from_bastion" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker.id
@@ -201,7 +183,8 @@ resource "aws_security_group_rule" "ssh_from_bastion" {
   to_port                  = 22
   protocol                 = "tcp"
 }
-
+*/
+//i change here
 resource "aws_security_group_rule" "all_from_control_plane" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker.id
@@ -321,7 +304,7 @@ resource "aws_lb_listener_rule" "asg" {
 }
 
 resource "aws_route53_record" "controlplane" {
-  zone_id = aws_route53_zone.bryan_dobc.id
+  zone_id = aws_route53_zone.phi_com.id
   name    = "controlplane"
   type    = "A"
   ttl     = 300
@@ -337,7 +320,7 @@ resource "aws_instance" "controlplane" {
   key_name               = aws_key_pair.lab_keypair.id
   tags                   = module.tags_controlplane.tags
 }
-
+/*
 resource "aws_instance" "bastion" {
   ami                    = "ami-02c7c728a7874ae7a"
   instance_type          = "t3.micro"
@@ -346,4 +329,4 @@ resource "aws_instance" "bastion" {
   key_name               = aws_key_pair.lab_keypair.id
   tags                   = module.tags_bastion.tags
 }
-
+*/
