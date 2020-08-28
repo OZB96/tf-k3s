@@ -1,4 +1,4 @@
-
+provider "random" {}
 
 module "tags_network" {
   source      = "git::https://github.com/cloudposse/terraform-null-label.git"
@@ -163,6 +163,15 @@ resource "aws_security_group" "controlplane" {
 
 }
 
+//added 
+resource "random_id" "keypair" {
+  keepers = {
+    public_key = file(var.public_key_path)
+  }
+
+  byte_length = 8
+}
+
 resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
@@ -196,10 +205,13 @@ resource "aws_security_group_rule" "all_from_control_plane" {
   protocol                 = "-1"
 }
 
+//added
 resource "aws_key_pair" "lab_keypair" {
-  key_name   = format("%s%s", var.name, "_keypair")
-  public_key = file(var.public_key_path)
+  key_name   = format("%s_keypair_%s", var.name, random_id.keypair.hex)
+  public_key = random_id.keypair.keepers.public_key
 }
+
+
 
 resource "aws_launch_configuration" "worker" {
   name            = format("%s-lc", var.name)
@@ -319,9 +331,12 @@ resource "aws_instance" "controlplane" {
   instance_type          = "t3.micro"
   subnet_id              = aws_subnet.controlplane[count.index].id
   vpc_security_group_ids = [aws_security_group.controlplane.id]
-  key_name               = aws_key_pair.lab_keypair.id
   tags                   = module.tags_controlplane.tags
+  
+  //added
+   key_name               = aws_key_pair.lab_keypair.id
 }
+
 /*
 resource "aws_instance" "bastion" {
   ami                    = "ami-02c7c728a7874ae7a"
