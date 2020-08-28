@@ -104,7 +104,7 @@ resource "aws_subnet" "controlplane" {
   count                   = 1
   vpc_id                  = aws_vpc.lab.id
   cidr_block              = format("10.0.%s.0/24", count.index + 20)
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   tags                    = module.tags_controlplane.tags
 }
