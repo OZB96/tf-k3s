@@ -1,3 +1,3 @@
-output "bastion" {
-  value = aws_instance.bastion.public_ip
+output "control_plan" {
+  value = aws_instance.control.plan.public_ip
 }
