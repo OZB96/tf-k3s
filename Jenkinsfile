@@ -1,8 +1,20 @@
 pipeline {
   agent {
-    docker {
-      image "bryandollery/terraform-packer-aws-alpine"
-      args "-u root --entrypoint=''"
+     kubernetes {
+    yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    stattt: testing
+spec:
+  containers:
+  - name: packer
+    image: bryandollery/terraform-packer-aws-alpine
+    command:
+    - bash
+    tty: true
+"""
     }
   }
   environment {

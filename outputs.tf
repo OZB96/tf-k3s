@@ -1,3 +1,3 @@
-output "control_plan_ip" {
-  value = module.dev.control_plan
+output "control_plane_ip" {
+  value = module.dev.control_plane
 }

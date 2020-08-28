@@ -1,3 +1,3 @@
-output "control_plan" {
-  value = aws_instance.control_plan.public_ip
+output "control_plane" {
+  value = aws_instance.control_plane.public_ip
 }
