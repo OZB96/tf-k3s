@@ -185,16 +185,18 @@ resource "aws_security_group_rule" "egress_to_all" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
 }
- /*
-resource "aws_security_group_rule" "ssh_from_bastion" {
+
+
+resource "aws_security_group_rule" "ssh_from_conrtolplan" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker.id
-  source_security_group_id = aws_security_group.bastion.id
+  source_security_group_id = aws_security_group.controlplane.id
   from_port                = 22
   to_port                  = 22
   protocol                 = "tcp"
 }
-*/
+
+
 //i change here
 resource "aws_security_group_rule" "all_from_control_plane" {
   type                     = "ingress"
