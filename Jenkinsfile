@@ -27,6 +27,13 @@ spec:
         AWS_PROFILE="phi-kh-labs"
   }
   stages {
+    stage("workspace") {
+          steps {
+	      sh 'terrafrom workspace new trone'
+	      sh 'terrafrom workspace select trone'
+      
+           }
+      }
       stage("init") {
           steps {
 	      sh 'pwd'
