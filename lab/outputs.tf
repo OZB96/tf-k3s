@@ -1,3 +1,3 @@
 output "control_plane" {
-  value = aws_instance.control_plane.public_ip
+  value = aws_instance.controlplane[0].public_ip
 }
