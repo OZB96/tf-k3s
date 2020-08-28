@@ -1,3 +1,5 @@
+provider "random" {}
+
 module "tags_network" {
   source      = "git::https://github.com/cloudposse/terraform-null-label.git"
   namespace   = var.name
@@ -155,7 +157,7 @@ resource "aws_security_group" "controlplane" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-		cidr_block      =["0.0.0.0/0"]
+    cidr_blocks      =["0.0.0.0/0"]
    // security_groups = [aws_security_group.bastion.id]
   }
 
