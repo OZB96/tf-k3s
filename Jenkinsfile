@@ -41,7 +41,7 @@ spec:
 	          }
                 }
                 
-        stage ("workspace"){
+     stage ("workspace"){
              steps {
           
                container ("workspace") {
@@ -75,4 +75,5 @@ spec:
           }
       }
   }
+}
 }
