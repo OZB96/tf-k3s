@@ -10,9 +10,9 @@ metadata:
 spec:
   containers:
   - name: workspace
-    image: hashicorp/terraform
+    image: bryandollery/terraform-packer-aws-alpine
     command:
-    - cat
+    - bash
     tty: true
 """
     }
@@ -31,8 +31,8 @@ spec:
           steps {
           
             container ("workspace") {
-                sh 'terrafrom workspace new trone'
-	        sh 'terrafrom workspace select trone'
+                sh 'terraform workspace new trone'
+	        sh 'terraform workspace select trone'
               }
 	     
       
