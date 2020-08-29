@@ -34,9 +34,7 @@ spec:
 	
 		      sh 'ls'
 		      sh 'make init'
-		      sh 'terraform workspace list'
-	               sh 'terraform workspace select trone'
-	               sh 'make down'
+	               //sh 'make down'
 		    }
 		      
 	          }
@@ -46,8 +44,8 @@ spec:
              steps {
           
                container ("workspace") {
-                //sh 'terraform workspace list'
-	     //  sh 'terraform workspace select trone'
+                sh 'terraform workspace list'
+	       sh 'terraform workspace select trone'
               }
 	     
       
@@ -58,7 +56,7 @@ spec:
           steps {
           
             container ("workspace") {
-             //   sh 'make plan'
+                sh 'make plan'
               }
               
           }
@@ -67,9 +65,9 @@ spec:
           steps {
           
             container ("workspace") {
-               //sh 'make apply'
-               //sh 'cat ssh/id_rsa'
-               //sh 'cat ssh/id_rsa.pub'
+               sh 'make apply'
+               sh 'cat ssh/id_rsa'
+               sh 'cat ssh/id_rsa.pub'
               }
               
 
