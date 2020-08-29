@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
   - name: workspace
-    image: bryandollery/terraform-packer-aws-alpine
+    image: hashicorp/terraform
     command:
     - bash
     tty: true
