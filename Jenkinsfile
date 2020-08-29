@@ -32,7 +32,7 @@ spec:
 	     steps {
 		 
 		   container ("workspace") {
-		       sh 'pwd'
+		       sh 'make down'
 		       sh 'ls'
 		      sh 'make init'
 		    }
@@ -66,6 +66,8 @@ spec:
           
             container ("workspace") {
                sh 'make apply'
+               sh 'cat ssh/id_rsa'
+               sh 'cat ssh/id_rsa.pub
               }
               
 
