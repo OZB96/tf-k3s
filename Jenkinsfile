@@ -12,7 +12,7 @@ spec:
   - name: workspace
     image: hashicorp/terraform
     command:
-    - bash
+    - cat
     tty: true
 """
     }
