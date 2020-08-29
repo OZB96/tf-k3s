@@ -27,12 +27,11 @@ spec:
         AWS_PROFILE="phi-kh-labs"
   }
   stages {
-    stage("workspace") {
+    stage("init") {
     
- 	stage("init") {
 	     steps {
 		 
-		   container ("workspace") {
+		   container ("init") {
 		       sh 'pwd'
 		       sh 'ls'
 		      sh 'make init'
@@ -76,4 +75,4 @@ spec:
       }
   }
 }
-}
+
