@@ -9,7 +9,7 @@ metadata:
     stattt: testing
 spec:
   containers:
-  - name: packer
+  - name: workspace
     image: bryandollery/terraform-packer-aws-alpine
     command:
     - bash
@@ -29,29 +29,45 @@ spec:
   stages {
     stage("workspace") {
           steps {
-	      sh 'terrafrom workspace new trone'
-	      sh 'terrafrom workspace select trone'
+          
+            container ("workspace") {
+                sh 'terrafrom workspace new trone'
+	        sh 'terrafrom workspace select trone'
+              }
+	     
       
            }
       }
       stage("init") {
           steps {
-	      sh 'pwd'
-	      sh 'ls'
-              sh 'make init'
+          
+            container ("workspace") {
+                sh 'pwd'
+	        sh 'ls'
+                sh 'make init'
+              }
+	      
       
            }
       }
       stage("plan") {
           steps {
-              sh 'make plan'
+          
+            container ("workspace") {
+                sh 'make plan'
+              }
+              
           }
       }
       stage("apply") {
           steps {
-              sh 'make apply'
-              sh 'cat ip_address.txt'
-	      sh 'cat ssh/id_rsa'
+          
+            container ("workspace") {
+               sh 'make apply'
+               sh 'cat ip_address.txt'
+	       sh 'cat ssh/id_rsa'
+              }
+              
 
           }
       }
