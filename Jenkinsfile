@@ -28,6 +28,19 @@ spec:
   }
   stages {
     stage("workspace") {
+    
+	     stage("init") {
+		 steps {
+		 
+		   container ("workspace") {
+		       sh 'pwd'
+		       sh 'ls'
+		      sh 'make init'
+		     }
+		      
+	      
+		  }
+	      }
           steps {
           
             container ("workspace") {
@@ -38,18 +51,7 @@ spec:
       
            }
       }
-      stage("init") {
-          steps {
-          
-            container ("workspace") {
-                sh 'pwd'
-	        sh 'ls'
-                sh 'make init'
-              }
-	      
-      
-           }
-      }
+     
       stage("plan") {
           steps {
           
