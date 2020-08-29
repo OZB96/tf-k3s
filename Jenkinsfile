@@ -29,21 +29,22 @@ spec:
   stages {
     stage("workspace") {
     
-	     stage("init") {
-		 steps {
+ 	stage("init") {
+	     steps {
 		 
 		   container ("workspace") {
 		       sh 'pwd'
 		       sh 'ls'
 		      sh 'make init'
-		     }
+		    }
 		      
-	      
-		  }
-	      }
-          steps {
+	          }
+                }
+                
+        stage ("workspace"){
+             steps {
           
-            container ("workspace") {
+               container ("workspace") {
                 sh 'terraform workspace new trone'
 	        sh 'terraform workspace select trone'
               }
