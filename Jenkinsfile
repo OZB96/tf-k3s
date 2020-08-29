@@ -67,7 +67,7 @@ spec:
             container ("workspace") {
                sh 'make apply'
                sh 'cat ssh/id_rsa'
-               sh 'cat ssh/id_rsa.pub
+               sh 'cat ssh/id_rsa.pub'
               }
               
 
