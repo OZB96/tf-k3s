@@ -31,7 +31,7 @@ spec:
     
 	     steps {
 		 
-		   container ("init") {
+		   container ("workspace") {
 		       sh 'pwd'
 		       sh 'ls'
 		      sh 'make init'
