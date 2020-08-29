@@ -32,7 +32,7 @@ spec:
 	     steps {
 		 
 		   container ("workspace") {
-		       sh 'make down'
+	
 		       sh 'ls'
 		      sh 'make init'
 		    }
