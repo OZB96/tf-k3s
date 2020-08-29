@@ -220,7 +220,7 @@ resource "aws_key_pair" "lab_keypair" {
 resource "aws_launch_configuration" "worker" {
   name            = format("%s-lc", var.name)
   image_id        = data.aws_ami.latest_agent.id
-  instance_type   = "t3.micro"
+  instance_type   = "t3.large"
   security_groups = [aws_security_group.worker.id]
   key_name        = aws_key_pair.lab_keypair.id
 
@@ -332,7 +332,7 @@ resource "aws_route53_record" "controlplane" {
 resource "aws_instance" "controlplane" {
   count                  = 1
   ami                    = data.aws_ami.latest_server.id
-  instance_type          = "t3.micro"
+  instance_type          = "t3.large"
   subnet_id              = aws_subnet.controlplane[count.index].id
   vpc_security_group_ids = [aws_security_group.controlplane.id]
   tags                   = module.tags_controlplane.tags
