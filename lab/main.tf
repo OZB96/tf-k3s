@@ -162,6 +162,20 @@ resource "aws_security_group" "controlplane" {
     cidr_blocks     =["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port       = 30000
+    to_port         = 32767
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+    security_groups = [aws_security_group.worker.id]
+  }
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks     =["0.0.0.0/0"]
+  }
 
 }
 
@@ -177,6 +191,21 @@ resource "random_id" "keypair" {
 resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
+  
+  ingress {
+    from_port       = 30000
+    to_port         = 32767
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+    security_groups = [aws_security_group.controlplane.id]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+  }
 }
 
 resource "aws_security_group_rule" "egress_to_all" {
