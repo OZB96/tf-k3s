@@ -269,7 +269,7 @@ resource "aws_instance" "worker" {
   user = "ubuntu"
   host = self.private_ip
   private_key = file("./ssh/id_rsa")
-  bastion_host = aws_instance.controlplane.public_ip
+  bastion_host = aws_instance.controlplane.0.public_ip
   bastion_private_key = file("./ssh/id_rsa")
   bastion_user = "ubuntu"
   }
