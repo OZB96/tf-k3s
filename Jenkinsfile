@@ -34,14 +34,14 @@ spec:
 	
 		      sh 'ls'
 		      sh 'make init'
-		      sh 'terraform workspace list'
-	              sh 'terraform workspace select trone'
-	              sh 'make down'
+		      //sh 'terraform workspace list'
+	              //sh 'terraform workspace select trone'
+	              //sh 'make down'
 		    }
 		      
 	          }
                 }
-   /*           
+   //*           
      stage ("workspace"){
              steps {
           
@@ -74,7 +74,7 @@ spec:
               
 
           }
-      }*/
+      }//*/
   }
 }
 
