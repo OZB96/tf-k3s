@@ -21,7 +21,7 @@ spec:
         CREDS = credentials('aws_secerts')
         AWS_ACCESS_KEY_ID="${CREDS_USR}"
         AWS_SECRET_ACCESS_KEY="${CREDS_PSW}"
-        OWNER= "phiProject"
+        OWNER= "phi"
         TF_NAMESPACE="omar"
         PROJECT_NAME="web-server"
         AWS_PROFILE="phi-kh-labs"
@@ -34,14 +34,14 @@ spec:
 	
 		      sh 'ls'
 		      sh 'make init'
-		      //sh 'terraform workspace list'
-	              //sh 'terraform workspace select trone'
-	              //sh 'make down'
+		      sh 'terraform workspace list'
+	              sh 'terraform workspace select trone'
+	              sh 'make down'
 		    }
 		      
 	          }
                 }
-   //*           
+   /*           
      stage ("workspace"){
              steps {
           
@@ -74,7 +74,7 @@ spec:
               
 
           }
-      }//*/
+      }*/
   }
 }
 
