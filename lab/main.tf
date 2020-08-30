@@ -282,7 +282,7 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
 
   inline = [ 
-  "sudo systemctl restart get_token"
+  "sudo . /home/ubuntu/serverinfo.sh"
   ]
 
   connection {
