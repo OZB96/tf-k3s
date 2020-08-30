@@ -121,9 +121,9 @@ resource "aws_security_group" "bastion" {
   }
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -190,6 +190,14 @@ resource "random_id" "keypair" {
 resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
+
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+  }
+ 
 }
 
 resource "aws_security_group_rule" "egress_to_all" {
