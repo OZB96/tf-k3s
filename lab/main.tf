@@ -282,6 +282,7 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
 
   inline = [ 
+  "sudo systemctl enable get_token",
   "sudo systemctl start get_token"
   ]
 
