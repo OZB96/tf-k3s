@@ -108,26 +108,7 @@ resource "aws_subnet" "controlplane" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   tags                    = module.tags_controlplane.tags
 }
-/*
-resource "aws_security_group" "bastion" {
-  vpc_id = aws_vpc.lab.id
-  tags   = module.tags_bastion.tags
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-*/
 resource "aws_security_group" "controlplane" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_controlplane.tags
@@ -146,8 +127,6 @@ resource "aws_security_group" "controlplane" {
     security_groups = [aws_security_group.worker.id]
   }
   
-//And i change here
-
   ingress {
     from_port       = 6443
     to_port         = 6443
@@ -190,21 +169,6 @@ resource "random_id" "keypair" {
 resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
-    
-    egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     =["0.0.0.0/0"]
-  }
-
-    ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     =["0.0.0.0/0"]
-  }
-
 }
 
 resource "aws_security_group_rule" "egress_to_all" {
@@ -227,7 +191,6 @@ resource "aws_security_group_rule" "ssh_from_conrtolplan" {
 }
 
 
-//i change here
 resource "aws_security_group_rule" "all_from_control_plane" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker.id
@@ -238,27 +201,10 @@ resource "aws_security_group_rule" "all_from_control_plane" {
 }
 
 
-//added
 resource "aws_key_pair" "lab_keypair" {
   key_name   = format("%s_keypair_%s", var.name, random_id.keypair.hex)
   public_key = random_id.keypair.keepers.public_key
 }
-
-
-/*
-resource "aws_launch_configuration" "worker" {
-  name            = format("%s-lc", var.name)
-  image_id        = data.aws_ami.latest_agent.id
-  instance_type   = "t3.large"
-  security_groups = [aws_security_group.worker.id]
-  key_name        = aws_key_pair.lab_keypair.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-*/
-
 
 resource "aws_route53_record" "controlplane" {
   zone_id = aws_route53_zone.phi_com.id
@@ -290,9 +236,9 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
 
   inline = [ 
-  "export K3S_HOST=controlplane.phi.com",
-  "export K3S_TOKEN=$(nc.traditional $K3S_HOST 12345)",
-  "export K3S_URL=https://$K3S_HOST:6443",
+  "echo K3S_HOST=controlplane.phi.com >> /etc/environment",
+  "echo K3S_TOKEN=$(nc.traditional $K3S_HOST 12345) >> /etc/environment",
+  "echo K3S_URL=https://$K3S_HOST:6443 >> /etc/environment",
   "env",
   "curl -sfL https://get.k3s.io | sh -",
   ]
@@ -307,20 +253,8 @@ resource "aws_instance" "worker" {
   bastion_user = "ubuntu"
   }
   }  
-  //added
-   key_name               = aws_key_pair.lab_keypair.id
+  key_name   = aws_key_pair.lab_keypair.id
   depends_on = [
     aws_instance.controlplane
   ]
-  
 }
-/*
-resource "aws_instance" "bastion" {
-  ami                    = "ami-02c7c728a7874ae7a"
-  instance_type          = "t3.micro"
-  subnet_id              = aws_subnet.bastion.id
-  vpc_security_group_ids = [aws_security_group.bastion.id]
-  key_name               = aws_key_pair.lab_keypair.id
-  tags                   = module.tags_bastion.tags
-}
-*/
