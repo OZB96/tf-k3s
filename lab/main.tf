@@ -138,18 +138,11 @@ resource "aws_security_group" "controlplane" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  
   ingress {
-    from_port       = 6443
-    to_port         = 6443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.worker.id]
-  }
-
-  ingress {
-    from_port       = 8763
-    to_port         = 8763
-    protocol        = "tcp"
+    from_port       = 12345
+    to_port         = 12345
+    protocol        = "-1"
     security_groups = [aws_security_group.worker.id]
   }
   
@@ -216,7 +209,7 @@ resource "aws_key_pair" "lab_keypair" {
 }
 
 
-
+/*
 resource "aws_launch_configuration" "worker" {
   name            = format("%s-lc", var.name)
   image_id        = data.aws_ami.latest_agent.id
@@ -228,98 +221,8 @@ resource "aws_launch_configuration" "worker" {
     create_before_destroy = true
   }
 }
+*/
 
-resource "aws_autoscaling_group" "workers" {
-  name                      = format("%s-asg", var.name)
-  max_size                  = 3
-  min_size                  = 2
-  launch_configuration      = aws_launch_configuration.worker.name
-  health_check_grace_period = 300
-  health_check_type         = "EC2"
-  vpc_zone_identifier       = aws_subnet.worker.*.id
-  target_group_arns         = [aws_lb_target_group.asg.arn]
-  depends_on                = [aws_route53_record.controlplane]
-
-  tag {
-    key                 = "owner"
-    value               = var.name
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "type"
-    value               = "worker"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "environment"
-    value               = "dev"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "name"
-    value               = format("%s-devops-bootcamp-worker_node", var.name)
-    propagate_at_launch = true
-  }
-
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_lb" "elb" {
-  load_balancer_type = "application"
-  subnets            = aws_subnet.worker.*.id
-  security_groups    = [aws_security_group.worker.id]
-  tags               = module.tags_worker.tags
-}
-
-resource "aws_lb_target_group" "asg" {
-  name     = format("%s-tg", var.name)
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.lab.id
-  tags     = module.tags_worker.tags
-}
-
-resource "aws_autoscaling_attachment" "asg" {
-  autoscaling_group_name = aws_autoscaling_group.workers.id
-  alb_target_group_arn   = aws_lb_target_group.asg.arn
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.elb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404: page not found"
-      status_code  = 404
-    }
-  }
-}
-
-resource "aws_lb_listener_rule" "asg" {
-  listener_arn = aws_lb_listener.http.arn
-  priority     = 100
-
-  action {
-    target_group_arn = aws_lb_target_group.asg.arn
-    type             = "forward"
-  }
-
-  condition {
-    path_pattern {
-      values = ["*"]
-    }
-  }
-}
 
 resource "aws_route53_record" "controlplane" {
   zone_id = aws_route53_zone.phi_com.id
@@ -341,6 +244,17 @@ resource "aws_instance" "controlplane" {
    key_name               = aws_key_pair.lab_keypair.id
 }
 
+resource "aws_instance" "worker" {
+  count                  = 2
+  ami                    = data.aws_ami.latest_agent.id
+  instance_type          = "t3.large"
+  subnet_id              = aws_subnet.worker[count.index].id
+  vpc_security_group_ids = [aws_security_group.worker.id]
+  tags                   = module.tags_worker.tags
+  
+  //added
+   key_name               = aws_key_pair.lab_keypair.id
+}
 /*
 resource "aws_instance" "bastion" {
   ami                    = "ami-02c7c728a7874ae7a"
