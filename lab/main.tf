@@ -190,14 +190,21 @@ resource "random_id" "keypair" {
 resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
-
-  ingress {
+    
+    egress {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
     cidr_blocks     =["0.0.0.0/0"]
   }
- 
+
+    ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+  }
+
 }
 
 resource "aws_security_group_rule" "egress_to_all" {
@@ -229,6 +236,7 @@ resource "aws_security_group_rule" "all_from_control_plane" {
   to_port                  = 0
   protocol                 = "-1"
 }
+
 
 //added
 resource "aws_key_pair" "lab_keypair" {
