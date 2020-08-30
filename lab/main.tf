@@ -258,7 +258,22 @@ resource "aws_instance" "worker" {
   subnet_id              = aws_subnet.worker[count.index].id
   vpc_security_group_ids = [aws_security_group.worker.id]
   tags                   = module.tags_worker.tags
-  
+  provisioner "remote-exec" {
+
+  inline = [ 
+  "sudo systemctl restart get_token"
+  ]
+
+  connection {
+  type = "ssh"
+  user = "ubuntu"
+  host = self.private_ip
+  private_key = file("./ssh/id_rsa")
+  bastion_host = aws_instance.controlplane.public_ip
+  bastion_private_key = file("./ssh/id_rsa")
+  bastion_user = "ubuntu"
+  }
+  }  
   //added
    key_name               = aws_key_pair.lab_keypair.id
   depends_on = [
