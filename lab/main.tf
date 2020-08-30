@@ -236,7 +236,7 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
 
   inline = [ 
-  "sudo cho K3S_HOST=controlplane.phi.com >> /etc/environment",
+  "sudo echo K3S_HOST=controlplane.phi.com >> /etc/environment",
   "sudo echo K3S_TOKEN=$(nc.traditional $K3S_HOST 12345) >> /etc/environment",
   "sudo echo K3S_URL=https://$K3S_HOST:6443 >> /etc/environment",
   "env",
