@@ -142,7 +142,7 @@ resource "aws_security_group" "controlplane" {
   ingress {
     from_port       = 12345
     to_port         = 12345
-    protocol        = "-1"
+    protocol        = "tcp"
     security_groups = [aws_security_group.worker.id]
   }
   
