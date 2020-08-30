@@ -277,7 +277,7 @@ resource "aws_instance" "worker" {
   //added
    key_name               = aws_key_pair.lab_keypair.id
   depends_on = [
-    aws_instance.controlplane.id
+    aws_instance.controlplane
   ]
   
 }
