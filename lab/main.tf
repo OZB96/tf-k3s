@@ -282,7 +282,7 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
 
   inline = [ 
-  "sudo . /home/ubuntu/serverinfo.sh"
+  "/home/ubuntu/serverinfo.sh"
   ]
 
   connection {
