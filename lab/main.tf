@@ -255,7 +255,7 @@ resource "aws_instance" "worker" {
   "export K3S_TOKEN=$(nc.traditional $K3S_HOST 12345)",
   "export K3S_URL=https://$K3S_HOST:6443",
   "env",
-  "sudo rm -f /etc/resolv.conf && echo namespace 8.8.8.8 > /home/ubuntu/resolv.conf && sudo mv /home/ubuntu/resolv.conf /etc/"
+  "sudo rm -f /etc/resolv.conf && echo namespace 8.8.8.8 > /home/ubuntu/resolv.conf && sudo mv /home/ubuntu/resolv.conf /etc/",
   "curl -sfL https://get.k3s.io | sh -",
   ]
 
