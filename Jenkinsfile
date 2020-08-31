@@ -34,14 +34,14 @@ spec:
 	
 		      sh 'ls'
 		      sh 'make init'
-		      sh 'terraform workspace list'
-	              sh 'terraform workspace select trone'
-	              sh 'terraform destroy -auto-approve -lock=false'
+		      //sh 'terraform workspace list'
+	              //sh 'terraform workspace select trone'
+	              //sh 'make down'
 		    }
 		      
 	          }
                 }
-         /*     
+              
      stage ("workspace"){
              steps {
           
@@ -75,7 +75,7 @@ spec:
               
 
           }
-      }*/
+      }
   }
 }
 
