@@ -33,7 +33,7 @@ apply:
 	time terraform apply plan.out 
 
 down:
-	time terraform destroy -auto-approve 
+	time terraform destroy -auto-approve -lock=false
 
 test: copy connect
 
