@@ -30,7 +30,7 @@ plan:
 	time terraform plan -out plan.out -var-file=terraform.tfvars -lock=false
 
 apply:
-	time terraform apply plan.out -lock=false 
+	time terraform -lock=false apply plan.out 
 
 down:
 	time terraform destroy -auto-approve -lock=false
