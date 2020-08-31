@@ -36,7 +36,7 @@ spec:
 		      sh 'make init'
 		      sh 'terraform workspace list'
 	              sh 'terraform workspace select trone'
-	              sh 'make down'
+	              sh 'terraform destroy -auto-approve -lock=false'
 		    }
 		      
 	          }
