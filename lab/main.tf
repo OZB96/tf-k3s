@@ -170,7 +170,7 @@ resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
   
-  engress {
+  egress {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
