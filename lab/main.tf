@@ -169,9 +169,24 @@ resource "random_id" "keypair" {
 resource "aws_security_group" "worker" {
   vpc_id = aws_vpc.lab.id
   tags   = module.tags_worker.tags
+  
+  engress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     =["0.0.0.0/0"]
+  }
+
 }
 
-resource "aws_security_group_rule" "egress_to_all" {
+/*resource "aws_security_group_rule" "egress_to_all" {
   type              = "egress"
   security_group_id = aws_security_group.worker.id
   from_port         = 0
@@ -179,8 +194,8 @@ resource "aws_security_group_rule" "egress_to_all" {
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
 }
-
-
+*/
+/*
 resource "aws_security_group_rule" "ssh_from_conrtolplan" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker.id
@@ -189,8 +204,8 @@ resource "aws_security_group_rule" "ssh_from_conrtolplan" {
   to_port                  = 22
   protocol                 = "tcp"
 }
-
-
+*/
+/*
 resource "aws_security_group_rule" "all_from_control_plane" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker.id
@@ -199,7 +214,7 @@ resource "aws_security_group_rule" "all_from_control_plane" {
   to_port                  = 0
   protocol                 = "-1"
 }
-
+*/
 
 resource "aws_key_pair" "lab_keypair" {
   key_name   = format("%s_keypair_%s", var.name, random_id.keypair.hex)
@@ -248,9 +263,9 @@ resource "aws_instance" "worker" {
   user = "ubuntu"
   host = self.private_ip
   private_key = file("./ssh/id_rsa")
-  bastion_host = aws_instance.controlplane.0.public_ip
-  bastion_private_key = file("./ssh/id_rsa")
-  bastion_user = "ubuntu"
+  //bastion_host = aws_instance.controlplane.0.public_ip
+  //bastion_private_key = file("./ssh/id_rsa")
+  //bastion_user = "ubuntu"
   }
   }  
   key_name   = aws_key_pair.lab_keypair.id
