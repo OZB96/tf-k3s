@@ -240,11 +240,7 @@ resource "aws_instance" "controlplane" {
   provisioner "remote-exec" {
 
   inline = [ 
-  "export K3S_HOST=controlplane.phi.com",
-  "export K3S_TOKEN=$(nc.traditional $K3S_HOST 12345)",
-  "export K3S_URL=https://$K3S_HOST:6443",
-  "env",
-  "curl -sfL https://get.k3s.io | sh -",
+  "sudo systemctl restart print_token",
   ]
 
   connection {
