@@ -266,7 +266,7 @@ resource "aws_instance" "worker" {
   inline = [ 
   "sleep 30",
   "export K3S_HOST=controlplane.phi.com",
-  "export K3S_TOKEN=$(nc ${aws_instance.controlplane.0.private_ip} 12345)",
+  "export K3S_TOKEN=$(nc $K3S_HOST 12345)",
   "export K3S_URL=https://$K3S_HOST:6443",
   "env",
   "curl -sfL https://get.k3s.io | sh -",
