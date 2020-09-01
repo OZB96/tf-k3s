@@ -252,6 +252,7 @@ resource "aws_instance" "controlplane" {
   }
   //added
    key_name               = aws_key_pair.lab_keypair.id
+
 }
 
 resource "aws_instance" "worker" {
@@ -284,7 +285,8 @@ resource "aws_instance" "worker" {
   }  
   key_name   = aws_key_pair.lab_keypair.id
   depends_on = [
-    aws_instance.controlplane
+    aws_instance.controlplane, aws_route53_record.controlplane
+
   ]
 }
 
