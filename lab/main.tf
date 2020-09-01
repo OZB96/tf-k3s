@@ -273,3 +273,32 @@ resource "aws_instance" "worker" {
     aws_instance.controlplane
   ]
 }
+
+resource "null_resource" "cluster" {
+  # Changes to any instance of the cluster requires re-provisioning
+  triggers = {
+    cluster_instance_ids = "${join(",", aws_instance.controlplane.0.id)}"
+  }
+
+  # Bootstrap script can run on any instance of the cluster
+  # So we just choose the first in this case
+  connection {
+  type = "ssh"
+  user = "ubuntu"
+  host = self.public_ip
+  private_key = file("./ssh/id_rsa")
+  //bastion_host = aws_instance.controlplane.0.public_ip
+  //bastion_private_key = file("./ssh/id_rsa")
+  //bastion_user = "ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    # Bootstrap script called with private_ip of each node in the cluster
+    inline = [
+      "cd /home/ubuntu/ && git clone https://github.com/OZB96/jenkins_for_k3s && cd jenkins_for_k3s && ./installer.sh",
+    ]
+  }
+  depends_on = [
+    aws_instance.worker
+  ]
+}
