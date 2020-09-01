@@ -237,7 +237,20 @@ resource "aws_instance" "controlplane" {
   subnet_id              = aws_subnet.controlplane[count.index].id
   vpc_security_group_ids = [aws_security_group.controlplane.id]
   tags                   = module.tags_controlplane.tags
-  
+  provisioner "remote-exec" {
+
+  inline = [ 
+  "sleep 30",
+  "nc 127.0.0.1 12345"
+  ]
+
+  connection {
+  type = "ssh"
+  user = "ubuntu"
+  host = self.public_ip
+  private_key = file("./ssh/id_rsa")
+  }
+  }
   //added
    key_name               = aws_key_pair.lab_keypair.id
 }
