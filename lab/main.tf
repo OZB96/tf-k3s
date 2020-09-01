@@ -227,7 +227,7 @@ resource "aws_route53_record" "controlplane" {
   name    = "controlplane"
   type    = "A"
   ttl     = 300
-  records = [aws_instance.controlplane.0.private_ip]
+  records = [aws_instance.controlplane.0.public_ip]
 }
 
 resource "aws_instance" "controlplane" {
@@ -252,6 +252,7 @@ resource "aws_instance" "worker" {
   provisioner "remote-exec" {
 
   inline = [ 
+  "sleep 30",
   "export K3S_HOST=controlplane.phi.com",
   "export K3S_TOKEN=$(nc.traditional $K3S_HOST 12345)",
   "export K3S_URL=https://$K3S_HOST:6443",
