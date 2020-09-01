@@ -272,7 +272,7 @@ resource "aws_instance" "worker" {
     aws_instance.controlplane
   ]
 }
-/*
+
 resource "null_resource" "cluster" {
   # Bootstrap script can run on any instance of the cluster
   # So we just choose the first in this case
@@ -296,4 +296,4 @@ resource "null_resource" "cluster" {
     aws_instance.worker
   ]
 }
-*/
+
