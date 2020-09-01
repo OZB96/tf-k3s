@@ -41,7 +41,7 @@ spec:
 		      
 	          }
                 }
-              /*
+              
      stage ("workspace"){
              steps {
           
@@ -75,7 +75,7 @@ spec:
               
 
           }
-      }*/
+      }
   }
 }
 
