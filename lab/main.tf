@@ -238,19 +238,6 @@ resource "aws_instance" "controlplane" {
   vpc_security_group_ids = [aws_security_group.controlplane.id]
   tags                   = module.tags_controlplane.tags
   
-  provisioner "remote-exec" {
-
-  inline = [ 
-  "sudo systemctl restart print_token && sleep 10",
-  ]
-
-  connection {
-  type = "ssh"
-  user = "ubuntu"
-  host = self.public_ip
-  private_key = file("./ssh/id_rsa")
-  }
-  } 
   //added
    key_name               = aws_key_pair.lab_keypair.id
 }
@@ -296,9 +283,6 @@ resource "null_resource" "cluster" {
   user = "ubuntu"
   host = aws_instance.controlplane.0.public_ip
   private_key = file("./ssh/id_rsa")
-  //bastion_host = aws_instance.controlplane.0.public_ip
-  //bastion_private_key = file("./ssh/id_rsa")
-  //bastion_user = "ubuntu"
   }
 
   provisioner "remote-exec" {
