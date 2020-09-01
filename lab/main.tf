@@ -275,17 +275,12 @@ resource "aws_instance" "worker" {
 }
 
 resource "null_resource" "cluster" {
-  # Changes to any instance of the cluster requires re-provisioning
-  triggers = {
-    cluster_instance_ids = "${join(",", aws_instance.controlplane.0.id)}"
-  }
-
   # Bootstrap script can run on any instance of the cluster
   # So we just choose the first in this case
   connection {
   type = "ssh"
   user = "ubuntu"
-  host = self.public_ip
+  host = aws_instance.controlplane.0.public_ip
   private_key = file("./ssh/id_rsa")
   //bastion_host = aws_instance.controlplane.0.public_ip
   //bastion_private_key = file("./ssh/id_rsa")
