@@ -124,8 +124,8 @@ resource "aws_security_group" "controlplane" {
     from_port       = 12345
     to_port         = 12345
     protocol        = "tcp"
-    #security_groups = [aws_security_group.worker.id]
-    cidr_blocks     =["0.0.0.0/0"]
+    security_groups = [aws_security_group.worker.id]
+    #cidr_blocks     =["0.0.0.0/0"]
   }
   
   ingress {
@@ -227,7 +227,7 @@ resource "aws_route53_record" "controlplane" {
   name    = "controlplane"
   type    = "A"
   ttl     = 300
-  records = [aws_instance.controlplane.0.public_ip]
+  records = [aws_instance.controlplane.0.private_ip]
 }
 
 resource "aws_instance" "controlplane" {
